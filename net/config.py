@@ -33,15 +33,12 @@ class Config:
     """配置类"""
     scan_flag: bool = False
 
-    @property
     def load_scan_data(self):
         """导入扫描信息"""
         try:
-            with open(
-                    str(resource_dir / res_filename),
-                    mode="r",
-                    encoding="utf-8"
-            ) as f:
+            with open(str(resource_dir / res_filename),
+                      mode="r",
+                      encoding="utf-8") as f:
                 content: dict = json.loads(f.read())
         except FileNotFoundError:
             err_info = f"-[{res_filename}]- File is not Found!"
@@ -67,6 +64,7 @@ class Config:
 
 
 class Log:
+
     def __init__(self, log_name="net_log.log", bind_name="Login_info"):
         if not log_name.endswith(".log"):
             log_name: str = log_name + ".log"
@@ -75,19 +73,16 @@ class Log:
         logger.remove()
 
         # 添加控制台输出
-        logger.add(
-            sys.stdout,
-            colorize=True,
-            format="<green><b>{time:YYYY-MM-DD HH:mm:ss}</b> </green> "
-                   "| <blue>{level}</blue> | {file} - {message}"
-        )
+        logger.add(sys.stdout,
+                   colorize=True,
+                   format="<green><b>{time:YYYY-MM-DD HH:mm:ss}</b> </green> "
+                   "| <blue>{level}</blue> | {file} - {message}")
 
         logger.add(
             str(log_dir / log_name),
             level='DEBUG',
             format='{time:YYYY-MM-DD HH:mm:ss} - |{level}| {file} - {message}',
-            rotation="10 MB"
-        )
+            rotation="10 MB")
         logger.bind(name=bind_name)
 
     @staticmethod

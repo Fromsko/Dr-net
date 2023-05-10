@@ -16,18 +16,14 @@ from uvicorn import run
 from config import Config, log
 
 try:
-    result = Config().load_scan_data
+    result = Config().load_scan_data()
 except FileNotFoundError:
     log.error("File not found!")
     sys.exit(1)
 else:
     data_info = list(result.values())
 
-app = FastAPI(
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None
-)
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
 
 @app.exception_handler(404)
@@ -38,12 +34,6 @@ async def redirect(request: Request, exc):
 @app.api_route('/api/ip', methods=['GET', 'POST'])
 async def choice_one_ip(request: Request):
     origin_ip: str = request.client.host
-    """
-    if request.method == "GET":
-        log.info(f"此次请求是 GET {origin_ip}")
-    elif request.method == "POST":
-        log.info(f"此次请求是 POST {origin_ip}")
-    """
     one_ip = choice(choice(data_info))
     log.info(f"获取到的地址是: {one_ip}")
     return {'content': one_ip, 'origin_ip': origin_ip}
