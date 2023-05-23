@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     @Author: kong
-    @File  : config.py
     @Date  : 2023-04-20 02:54:55
     @GitHub: https://github.com/kongxiaoaaa
     @notes : 配置文件
@@ -17,14 +16,12 @@ from user_agent import generate_user_agent
 
 # 根路径
 base_dir = Path(__file__).parents[1]
-# 网络文件
-net_dir: Path = base_dir / 'net'
 # 日志路径
-log_dir: Path = base_dir.parent / 'log'
+log_dir: Path = base_dir / 'log'
 # 资源路径
 resource_dir: Path = base_dir / 'res'
 # 资源文件
-res_filename: str = "scan-all.json"
+res_filename = "scan-all.json"
 # 请求头
 header: dict = {"User-Agent": generate_user_agent()}
 
@@ -33,17 +30,21 @@ class Config:
     """配置类"""
     scan_flag: bool = False
 
-    def load_scan_data(self):
+    @staticmethod
+    def load_scan_data():
         """导入扫描信息"""
         try:
-            with open(str(resource_dir / res_filename),
-                      mode="r",
-                      encoding="utf-8") as f:
-                content: dict = json.loads(f.read())
+            load_file = str(resource_dir / res_filename)
+            with open(
+                    load_file,
+                    mode="r",
+                    encoding="utf-8"
+            ) as f:
+                content = json.loads(f.read())
         except FileNotFoundError:
-            err_info = f"-[{res_filename}]- File is not Found!"
-            raise FileNotFoundError(err_info)
-        return content
+            log.debug("File is not Found!")
+            return {}
+        return list(content.values())
 
     def check_file_timeout(self):
         """文件修改时间检测 or 文件存在检测"""
@@ -64,25 +65,28 @@ class Config:
 
 
 class Log:
+    def __init__(self, log_name="net-ip.log", bind_name="Login_info"):
 
-    def __init__(self, log_name="net_log.log", bind_name="Login_info"):
         if not log_name.endswith(".log"):
             log_name: str = log_name + ".log"
+        if not log_dir.exists():
+            log_dir.mkdir()
 
         # 移除标准控制台
         logger.remove()
-
         # 添加控制台输出
-        logger.add(sys.stdout,
-                   colorize=True,
-                   format="<green><b>{time:YYYY-MM-DD HH:mm:ss}</b> </green> "
-                   "| <blue>{level}</blue> | {file} - {message}")
-
+        logger.add(
+            sys.stdout,
+            colorize=True,
+            format="<green><b>{time:YYYY-MM-DD HH:mm:ss}</b> </green> "
+                   "| <blue>{level}</blue> | {file} - {message}"
+        )
         logger.add(
             str(log_dir / log_name),
             level='DEBUG',
             format='{time:YYYY-MM-DD HH:mm:ss} - |{level}| {file} - {message}',
-            rotation="10 MB")
+            rotation="10 MB"
+        )
         logger.bind(name=bind_name)
 
     @staticmethod
