@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <style>
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+<div class="center">
+    <div class="layui-card">
+        <div class="layui-card-header">登录</div>
+        <div class="layui-card-body">
+            <form class="layui-form" action="/login" method="POST">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="username" name="username" required lay-verify="required"
+                               placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="password" name="password" required lay-verify="required"
+                               placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">验证码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="captcha" name="captcha" lay-verify="required" autocomplete="off"
+                               placeholder="请输入验证码" class="layui-input">
+                        <img id="captchaImg" src="/captcha" alt="captcha" class="captcha-img">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" type="submit" lay-submit lay-filter="loginBtn">登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+        // 监听验证码图片的点击事件
+        layui.$('#captchaImg').on('click', function () {
+            renderCaptcha();
+        });
+
+        // 渲染验证码图片
+        function renderCaptcha() {
+            layui.$('#captchaImg').attr('src', '/captcha?' + Date.now());
+        }
+
+        // 监听表单提交事件
+        form.on('submit(loginBtn)', function (data) {
+            // 阻止表单 默认提交行为
+            event.preventDefault();
+            let {username, password, captcha} = data.field
+            layer.msg(JSON.stringify(data.field), {icon: 2, time: 4000});
+            console.log(username, password, captcha)
+
+            // 构建请求体
+            let params = new URLSearchParams();
+            params.append('username', username);
+            params.append('password', password);
+            params.append('captcha', captcha);
+
+            // 发送登录请求
+            fetch('/login', {
+                method: 'POST',
+                body: params
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data.error) {
+                        // 登录失败，处理错误信息
+                        handleLoginError(data.error);
+                    } else {
+                        // 登录成功，执行相应操作
+                        // ...
+                        layer.msg("登录成功!");
+                    }
+                })
+                .catch(function (error) {
+                    console.error('登录请求出错:', error);
+                });
+
+            // 处理登录错误信息
+            function handleLoginError(error) {
+                // 根据错误类型执行相应操作
+                if (error.type === 'username_password_error') {
+                    // 清空用户名和密码输入框
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    document.getElementById('captcha').value = '';
+                } else if (error.type === 'captcha_error') {
+                    // 重新加载验证码图片
+                    renderCaptcha();
+                }
+                // // 显示错误信息
+                // layer.msg(error.message);
+            }
+
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

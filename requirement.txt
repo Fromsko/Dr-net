@@ -1,5 +1,0 @@
-wmi
-user-agent
-requests
-loguru
-fastapi[all]
