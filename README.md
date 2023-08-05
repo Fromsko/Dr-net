@@ -2,7 +2,7 @@
 
 `net-tools` 是一款由 Go语言 编写的 内网伪装IP的工具 (GUI) 版
 
-基于Arp协议的扫描工具, 能够扫描指定网段存活主机信息 [IP | MAC | TLL]
+基于Arp协议的扫描工具, 能够扫描指定网段存活主机信息 [IP | MAC | TTL]
 
 ---
 
@@ -58,7 +58,7 @@
 ## 编译
 
 ```shell
-cd snet-tools
+cd Dr-net
 # 获取依赖
 go mod tidy
 # 安装 fyne 的命令行工具
