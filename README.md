@@ -1,6 +1,8 @@
 # Dr-net
 
-Dr.com 校园网绕过（模拟登录）
+Dr.com 校园网 WAF 绕过（模拟登录）
+
+> 仅适用于 HNIU 校园网
 
 ## 开发
 
@@ -32,6 +34,8 @@ Dr.com 校园网绕过（模拟登录）
   ![](./backend/res/index.png)
 - `管理页面`
   ![](./backend/res/config.png)
+- `连接页面`
+  ![](./backend/res/连接状态.png)
 
 ## 使用
 
@@ -78,4 +82,9 @@ Dr.com 校园网绕过（模拟登录）
 
 ## 鸣谢
 
-- 雏形 <a href="https://github.com/Fromsko/Dr-net">https://github.com/Fromsko/Dr-net</a>
+- [wails](https://wails.io) - GO语言流行的GUI库
+- [arp-scan](https://github.com/QbsuranAlang/arp-scan-windows-) - C 实现的`arp`扫描
+- [scanPort](https://github.com/xs25cn/scanPort) - Go 实现的端口扫描工具
+- [fyne](https://github.com/fyne-io/fyne) - Go 流行的`GUI`框架
+- [qinglong](https://github.com/whyour/qinglong) - 定时任务管理平台
+- [port-forward](https://github.com/tavenli/port-forward) - Go 实现的端口转发工具
