@@ -1,76 +1,81 @@
-# 内网IP伪装
+# Dr-net
 
-`net-tools` 是一款由 Go语言 编写的 内网伪装IP的工具 (GUI) 版
+Dr.com 校园网绕过（模拟登录）
 
-基于Arp协议的扫描工具, 能够扫描指定网段存活主机信息 [IP | MAC | TTL]
+## 开发
 
----
+- 拉取依赖
 
-## 版本信息
+  ```shell
+  go mod tidy
+  ```
 
-> 工具: net-tools.exe
->
-> 版本：V4.1
->
-> 构建语言：go1.20.2
->
-> 系统环境：windows/amd64
+- 获取 `wails`
 
-项目版本更迭：
+  ```shell
+  go install github.com/wailsapp/wails/v2/cmd/wails@latest
+  ```
 
-+ `V1.0` Python 实现 基础功能
-+ `v2.0` Python 实现 安全的多进程
-+ `V3.0` Python + Go 1.18 实现 CLi版
-+ `V4.0` Python + Go 20.2 实现 GUI + Gin 版
+- 编译构建
 
-本人已离校, 该项目将不限期停更, 项目仅供参考
+  ```shell
+  wails build -upx -nsis
+  ```
 
-## 运行截屏
+- 可选依赖
+  - [`UPX`](https://upx.github.io/) 用于压缩您的应用程序。
+  - [`NSIS`](https://wails.io/docs/guides/windows-installer/) 用于生成 Windows 安装程序。
 
-![img.png](res/img.png)
+## 界面
 
-# 如何使用
+- `主界面`
+  ![](./backend/res/index.png)
+- `管理页面`
+  ![](./backend/res/config.png)
 
-> 本项目只支持在 `Win` 平台下使用
+## 使用
 
-项目出发点：
+1. 开始扫描
+2. 点击使用(同时只能有一个被使用)
+3. 设置 - 检测(查询网络状态)
+4. 清空(移除所有扫描结果|恢复网络)
 
-+ 课表数据更新不及时
-+ 电费数据难以获取
-+ 内网增加了基于MAC的心跳检测机制
+## 贡献
 
-注意：
+- 开发模板
 
-+ 不保证适用于所有系统
-+ 项目只作为学习技术交流
-+ 不提供任何违反规章制度的技术支援
+  ```shell
+  wails init -n myproject -t vue-ts
+  ```
 
-搭建建议：
+- 开发模式
 
-+ 使用本工具获取IP数据后 实现一个定时任务 进行自动替换IP地址
-+ 通过修改 路由器的 IP地址 | 网关 可以实现多端使用
-+ 对接青龙面板 和 port-forward 可以实现 安全的校内数据任务的爬取
+  ```shell
+  wails dev
+  ```
 
-适用范围：校园内网基于(Dr.COM)的认证系统
+- 构建模式(携带`debug`)
 
-适用人群：喜欢Golang的朋友
+  > -windowsconsole 保留控制台
+  >
+  > --debug 启用 debug 模式
 
-## 编译
+  ```shell
+  wails build --debug
+  ```
 
-```shell
-cd Dr-net
-# 获取依赖
-go mod tidy
-# 安装 fyne 的命令行工具
-go install fyne.io/fyne/v2/cmd/fyne@latest
-# 编译并打包
-fyne package -os windows -icon myapp.png -tags noconsole
-```
+- 构建模式(打包+压缩)
 
-# 鸣谢
+  > -s 跳过前端构建
+  >
+  > -upx 压缩
+  >
+  > -nsis `Win` 打包程序
 
-+ [arp-scan](https://github.com/QbsuranAlang/arp-scan-windows-) - C实现的`arp`扫描
-+ [scanPort](https://github.com/xs25cn/scanPort) - Go 实现的端口扫描工具
-+ [fyne](https://github.com/fyne-io/fyne) - Go 流行的`GUI`框架
-+ [qinglong](https://github.com/whyour/qinglong) - 定时任务管理平台
-+ [port-forward](https://github.com/tavenli/port-forward) - Go实现的端口转发工具
+  ```shell
+  wails build -upx -nsis
+  ```
+
+## 鸣谢
+
+- 雏形 <a href="https://github.com/Fromsko/Dr-net">https://github.com/Fromsko/Dr-net</a>
